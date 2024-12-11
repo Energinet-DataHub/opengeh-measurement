@@ -37,6 +37,12 @@ jobs:
     uses: ./.github/workflows/ci-electrical-heating.yml
     with:
       image_tag: ${{ needs.ci_docker.outputs.image_tag }}
+
+  ci_test_dab:
+    needs: [changes, ci_docker]
+    uses: ./.github/workflows/ci-test-dab.yml
+    with:
+      image_tag: ${{ needs.ci_docker.outputs.image_tag }}
   #
   # Branch policy status check
   #

@@ -1,0 +1,71 @@
+﻿name: CI Test DAB
+
+on:
+  workflow_call:
+    inputs:
+      image_tag:
+        type: string
+        default: latest
+
+jobs:
+  databricks_asset_brundles:
+    name: Validate Databricks asset bundles
+    runs-on: ubuntu-latest
+
+    env:
+      RELEASE_FOLDER_PATH: ./source/test_python_wheels
+      RELEASE_VERSION: test_${{ github.event.pull_request.number }}
+      RELEASE_ZIP_FILENAME: test_${{ github.event.pull_request.number }}.zip
+
+    steps:
+      # Check out this repo, so that this workflow can access it.
+      - uses: actions/checkout@v3
+
+      # Download the Databricks CLI.
+      # See https://github.com/databricks/setup-cli
+      - uses: databricks/setup-cli@main
+
+      # Validate the Databricks asset bundles.
+      # - run: |
+      #    cd ./source/test_python_wheels
+      #    databricks bundle validate
+
+      - name: Zip files for prerelease
+        uses: thedoctor0/zip-release@0.6.2
+        with:
+          type: zip
+          filename: ${{ env.RELEASE_ZIP_FILENAME }}
+          directory: ${{ env.RELEASE_FOLDER_PATH }}
+
+      - name: Create prerelease
+        uses: Energinet-Datahub/.github/.github/actions/github-create-release@v14
+        with:
+          repo_token: ${{ github.token }}
+          automatic_release_tag: ${{ env.RELEASE_VERSION }}
+          prerelease: true
+          title: ${{ env.RELEASE_VERSION }}
+          files: |
+            ${{ env.RELEASE_FOLDER_PATH }}/${{ env.RELEASE_ZIP_FILENAME }}
+
+  mypy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Run pip install and mypy check of files in package
+        shell: bash
+        run: |
+          pip install --upgrade pip
+          pip install mypy types-python-dateutil
+          mypy ./source/electrical_heating --disallow-untyped-defs --ignore-missing-imports
+
+  black_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: psf/black@stable
+        with:
+          options: --check --diff
+          src: ./source/electrical_heating
