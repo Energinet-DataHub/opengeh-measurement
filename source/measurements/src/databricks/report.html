@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <title>report.html</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            function showhide(
+                item,
+                id,
+                tooltip_when_showed = "",
+                tooltip_when_hided = "",
+            ) {
+                var div = document.getElementById(id);
+                if (div.style.display !== "block") {
+                    div.style.display = "block";
+                    item.style.transform = "rotate(0deg)";
+                    item.title = tooltip_when_showed;
+                } else {
+                    div.style.display = "none";
+                    item.style.transform = "rotate(-90deg)";
+                    item.title = tooltip_when_hided;
+                }
+            }
+
+            function showTest(checked, type) {
+                var scenarios = document.getElementsByClassName(
+                    type + "-scenario",
+                );
+                if (checked) {
+                    for (let i = 0; i < scenarios.length; i++) {
+                        scenarios[i].style.display = "flex";
+                    }
+                } else {
+                    for (let i = 0; i < scenarios.length; i++) {
+                        scenarios[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
+    </head>
+
+    <body
+        style="
+            font-family: &quot;Roboto&quot;, sans-serif;
+            padding: 4rem;
+            background: #f5f6f7;
+            scroll-behavior: smooth;
+            color: #1a1a1a;
+        "
+    >
+        <a href="#feature-statistics" id="feature-statistics-button"
+    style="position: fixed;z-index: 10; bottom: 1rem; right: 1rem; background-color: white;color: black; padding: 0.5rem 1rem; border-radius: 50px;box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.10);">
+    Return to top
+</a>
+        <div style="margin-bottom: 1rem">
+            <div
+                style="
+                    display: flex;
+                    align-items: first baseline;
+                    justify-content: space-between;
+                "
+            >
+                <div>
+                    <h1
+                        style="
+                            font-size: 2rem;
+                            font-weight: 400;
+                            margin-bottom: 0.25rem;
+                        "
+                    >
+                        Test report: report.html
+                    </h1>
+                    <p style="color: #535353; margin: 0 0 0.5rem 0">
+                        C:\Repos\opengeh-measurements\source\measurements\src\databricks\report.html
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #535353; margin: 0; text-align: right">
+                        2025-01-14 14:33:29
+                    </p>
+                    <div
+                        style="
+                            transform: scale(0.6);
+                            margin: 0 -3.5rem 0 0;
+                            padding: 0;
+                        "
+                    >
+                        <script
+                            type="text/javascript"
+                            src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+                            data-name="bmc-button"
+                            data-slug="mattiamonti"
+                            data-color="#D6F0E0"
+                            data-emoji=""
+                            data-font="Inter"
+                            data-text="Buy me a coffee"
+                            data-outline-color="#000000"
+                            data-font-color="#000000"
+                            data-coffee-color="#ffffff"
+                        ></script>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+    <div style="display: flex; gap: 0rem; align-items: center; margin-top: 0.5rem;">
+        <button onclick="showhide(this, 'test-file-uri', 'Close test file list', 'Open test file list')"
+            style="background-color: transparent;border: none; cursor: pointer; transform: rotate(-90deg);"
+            title="Open test file list">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 15 8" fill="none">
+                <path d="M0 0.5L7.5 8L15 0.5H0Z" fill="#1a1a1a" />
+            </svg>
+        </button>
+        <p style="margin: 0;">Test file list</p>
+    </div>
+    <div id="test-file-uri" style="display: none;">
+        <ul style="margin: 0.25rem 0;">
+            
+            <li style="color: #535353;">tests/step_defs/test_hello_world.py</li>
+            
+        </ul>
+    </div>
+</div>
+        </div>
+
+        <div>
+
+    <div style="width: 100%; display: flex; gap: 5%;">
+        <div
+            style="width: 35%; padding: 1rem 2rem; background-color: white; border-radius: 0.625rem; box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.10); display: flex; justify-content: space-between; flex-direction: column;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="width: 60%;">
+                    <canvas id="piechart"><canvas>
+                </div>
+
+                <div style="text-align: right;">
+                    <p>
+                        <span style="font-size: 1.25rem;">1</span>
+                        <span style=" color: #555;"> Total tests executed</span>
+                    </p>
+                    <p>
+                        <span id="passed" style="font-size: 1.25rem;">1</span>
+                        <span style="color: #555;"> Passed tests</span>
+                    </p>
+                    <p>
+                        <span id="failed" style="font-size: 1.25rem;">0</span>
+                        <span style=" color: #555; margin-left: 0.25rem;"> Failed tests</span>
+                    </p>
+                    <p>
+                        <span id="skipped" style="font-size: 1.25rem;">0</span>
+                        <span style=" color: #555; margin-left: 0.25rem;"> Skipped tests</span>
+                    </p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p>
+                    <span style="font-size: 1.25rem;">100.0%</span>
+                    <span style=" color: #555; margin-left: 0.25rem;"> of tests passed</span>
+                </p>
+                <p>
+                    <span style="font-size: 1.25rem;">
+                        
+                        0.07ms
+                        
+                    </span>
+                    <span style=" color: #555; margin-left: 0.25rem;"> Total duration</span>
+                </p>
+            </div>
+
+        </div>
+
+        <div
+            style="width: 55%; padding: 1rem 2rem; background-color: white; border-radius: 0.625rem; box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.10);">
+            <p style="color: #555;">Top failed Features in percentage</p>
+            <div style="max-height: 80%;">
+                <canvas id="barchart"></canvas>
+            </div>
+            <div style="display: none;">
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--Pie chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <script>
+        var piechart = document.getElementById('piechart').getContext('2d');
+        var barchart = document.getElementById('barchart').getContext('2d');
+        var passed = document.getElementById('passed').innerHTML
+        var failed = document.getElementById('failed').innerHTML
+        var skipped = document.getElementById('skipped').innerHTML
+
+        new Chart(piechart, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    "Passed",
+                    "Failed",
+                    "Skipped"
+                ],
+                datasets: [
+                    {
+                        "fill": true,
+                        "data": [
+                            passed,
+                            failed,
+                            skipped
+                        ],
+                        "borderWidth": "2",
+                        backgroundColor: [
+                            '#0D6832',
+                            '#AF233A',
+                            '#EDB527'
+                        ],
+                    }
+                ]
+            },
+            options: {
+                title: {
+                    display: false
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    y: {
+                        display: false,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        var feature_fail_name = document.getElementsByClassName('top-feature-fail-name')
+        var feature_fail_tests = document.getElementsByClassName('top-feature-fail-tests')
+        var f_name = []
+        var f_tests = []
+        for (var i = 0; i < feature_fail_name.length; i++) {
+            f_name.push(feature_fail_name[i].innerHTML)
+            f_tests.push(feature_fail_tests[i].innerHTML)
+        }
+        new Chart(barchart, {
+            type: 'bar',
+            data: {
+                labels: f_name,
+                datasets: [
+                    {
+                        "fill": true,
+                        "data": f_tests,
+                        "borderWidth": "1",
+                        borderRadius: 10,
+                        backgroundColor: [
+                            '#AF233A',
+                        ],
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 100,
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, ticks) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                //plugins: {
+                //    title: {
+                //        display: true,
+                //        text: 'Custom Chart Title'
+                //    }
+                //}
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                }
+            }
+        });
+
+    </script>
+
+
+
+</div>
+
+        <br />
+        <div
+            id="feature-statistics"
+            style="
+                background-color: white;
+                padding: 2rem;
+                border-radius: 0.625rem;
+                box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+            "
+        >
+            <table
+                border="0"
+                cellpadding="2"
+                style="width: 100%; border-collapse: collapse"
+                class="sortable"
+            >
+                <tbody>
+                    <tr style="border-bottom: 1px solid #555; color: #555">
+                        <td style="width: 50%; cursor: pointer">Feature</td>
+
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Total
+                        </td>
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Passed
+                        </td>
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Failed
+                        </td>
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Skipped
+                        </td>
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Success Rate
+                        </td>
+                        <td
+                            style="
+                                width: fit-content;
+                                text-align: center;
+                                cursor: pointer;
+                            "
+                        >
+                            Duration
+                        </td>
+                    </tr>
+                    <tr>
+    
+    
+    <td><a style="color: inherit;display: flex; align-items: center; gap: 0.25rem;" href="#Hello World">
+            <div style="display: flex; align-items: center;">
+    <svg width="14" height="15" viewBox="0 0 14 15" fill="black" xmlns="http://www.w3.org/2000/svg"
+        style="margin: 0;">
+        <title>Passed test</title>
+        <path
+            d="M6.02 10.72L10.955 5.785L9.975 4.805L6.02 8.76L4.025 6.765L3.045 7.745L6.02 10.72ZM7 14.5C6.03167 14.5 5.12167 14.3162 4.27 13.9488C3.41833 13.5813 2.6775 13.0825 2.0475 12.4525C1.4175 11.8225 0.91875 11.0817 0.55125 10.23C0.18375 9.37833 0 8.46833 0 7.5C0 6.53167 0.18375 5.62167 0.55125 4.77C0.91875 3.91833 1.4175 3.1775 2.0475 2.5475C2.6775 1.9175 3.41833 1.41875 4.27 1.05125C5.12167 0.68375 6.03167 0.5 7 0.5C7.96833 0.5 8.87833 0.68375 9.73 1.05125C10.5817 1.41875 11.3225 1.9175 11.9525 2.5475C12.5825 3.1775 13.0813 3.91833 13.4488 4.77C13.8162 5.62167 14 6.53167 14 7.5C14 8.46833 13.8162 9.37833 13.4488 10.23C13.0813 11.0817 12.5825 11.8225 11.9525 12.4525C11.3225 13.0825 10.5817 13.5813 9.73 13.9488C8.87833 14.3162 7.96833 14.5 7 14.5ZM7 13.1C8.56333 13.1 9.8875 12.5575 10.9725 11.4725C12.0575 10.3875 12.6 9.06333 12.6 7.5C12.6 5.93667 12.0575 4.6125 10.9725 3.5275C9.8875 2.4425 8.56333 1.9 7 1.9C5.43667 1.9 4.1125 2.4425 3.0275 3.5275C1.9425 4.6125 1.4 5.93667 1.4 7.5C1.4 9.06333 1.9425 10.3875 3.0275 11.4725C4.1125 12.5575 5.43667 13.1 7 13.1Z"
+            fill="#0D6832" />
+    </svg>
+</div>
+            Hello World
+        </a></td>
+    
+
+    <td style="text-align:center;">1</td>
+    <td style="text-align:center;">1</td>
+    <td style="text-align:center;">0</td>
+    <td style="text-align:center;">0</td>
+    <td style="text-align:center;">100%</td>
+
+    
+    <td style="text-align:center;">0.07ms</td>
+    
+</tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br />
+
+        <div
+            id="control-box"
+            style="display: flex; justify-content: space-between"
+        >
+            <div id="filters"
+    style="display: flex; gap: 1rem; background-color: white; padding: 1rem 2rem; border-radius: 0.625rem;box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.10);">
+    <div style="display: flex; align-items: center; gap: 0.25rem">
+        <input type="checkbox" id="show-passed" checked="true" onclick="showTest(this.checked, 'passed')">
+        <label for="show-passed">Show passed tests</label>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.25rem">
+        <input type="checkbox" id="show-failed" checked="true" onclick="showTest(this.checked, 'failed')">
+        <label for="show-failed">Show failed tests</label>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.25rem">
+        <input type="checkbox" id="show-skipped" checked="true" onclick="showTest(this.checked, 'skipped')">
+        <label for="show-skipped">Show skipped tests</label>
+    </div>
+</div>
+        </div>
+
+        <br />
+        <div style="display: flex; flex-direction: column; gap: 3.5rem">
+            <div id="Hello World" class="searchable"
+    style="display: flex; width: 72rem; flex-direction: column; align-items: flex-start; gap: 1rem; width: 100%;">
+    <div style="display: flex; width: 100%; justify-content: space-between; align-items:first baseline;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div>
+                    
+                    
+                    <p style="margin: 0 0rem 0 0; color: white; background-color: #0D6832; display: inline-block; border-radius: 50px;padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500;"
+    title="Number of test passed">
+    1</p>
+                    
+                    
+                    
+
+                </div>
+
+                <h2 style="margin: 0; display: inline-block; font-weight: 400; font-size: 1.5 rem;">
+                    <span>Feature</span>: Hello World
+                </h2>
+            </div>
+
+            <p style="margin: 0; color: #535353;">features\hello_world.feature</p>
+
+            
+
+            
+        </div>
+
+        <p style="color: #535353;
+        font-family: Roboto;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;">
+            
+            Executed in 0.073ms
+            
+        </p>
+    </div>
+
+    <div style="width: 100%; display: flex; gap: 1rem; flex-direction: column;">
+        <div style="display: flex; font-family: 'Roboto', sans-serif;;
+align-items: center;
+gap: 0.5rem;
+align-self: stretch;" class="passed-scenario searchable" id="Print Hello">
+    
+    <div
+        style="display: flex;width: auto;padding: 1rem;flex-direction: column;align-items: flex-start;gap: 0.5rem;flex: 1; border-radius: 0.625rem;border: 1.5px solid #0D6832;background: #D6F0E0;box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.10);">
+        
+
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            
+                            
+                            <div style="display: flex; align-items: center;">
+    <svg width="1.17rem" height="1.17rem" viewBox="0 0 14 15" fill="black" xmlns="http://www.w3.org/2000/svg"
+        style="margin: 0;">
+        <title>Passed test</title>
+        <path
+            d="M6.02 10.72L10.955 5.785L9.975 4.805L6.02 8.76L4.025 6.765L3.045 7.745L6.02 10.72ZM7 14.5C6.03167 14.5 5.12167 14.3162 4.27 13.9488C3.41833 13.5813 2.6775 13.0825 2.0475 12.4525C1.4175 11.8225 0.91875 11.0817 0.55125 10.23C0.18375 9.37833 0 8.46833 0 7.5C0 6.53167 0.18375 5.62167 0.55125 4.77C0.91875 3.91833 1.4175 3.1775 2.0475 2.5475C2.6775 1.9175 3.41833 1.41875 4.27 1.05125C5.12167 0.68375 6.03167 0.5 7 0.5C7.96833 0.5 8.87833 0.68375 9.73 1.05125C10.5817 1.41875 11.3225 1.9175 11.9525 2.5475C12.5825 3.1775 13.0813 3.91833 13.4488 4.77C13.8162 5.62167 14 6.53167 14 7.5C14 8.46833 13.8162 9.37833 13.4488 10.23C13.0813 11.0817 12.5825 11.8225 11.9525 12.4525C11.3225 13.0825 10.5817 13.5813 9.73 13.9488C8.87833 14.3162 7.96833 14.5 7 14.5ZM7 13.1C8.56333 13.1 9.8875 12.5575 10.9725 11.4725C12.0575 10.3875 12.6 9.06333 12.6 7.5C12.6 5.93667 12.0575 4.6125 10.9725 3.5275C9.8875 2.4425 8.56333 1.9 7 1.9C5.43667 1.9 4.1125 2.4425 3.0275 3.5275C1.9425 4.6125 1.4 5.93667 1.4 7.5C1.4 9.06333 1.9425 10.3875 3.0275 11.4725C4.1125 12.5575 5.43667 13.1 7 13.1Z"
+            fill="#0D6832" />
+    </svg>
+</div>
+                            
+                            <h3 style="margin: 0;font-family: Roboto;font-style: normal;font-weight: 500;">
+                                Scenario: Print Hello
+                                
+                            </h3>
+                        </div>
+                        
+                        
+                    </div>
+                    <p
+                        style="color: #1a1a1a;display: inline;margin: 0;font-family: Roboto;font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;">
+                        
+                        Executed in 0.073ms
+                        
+                    </p>
+                </div>
+                <div
+                    style="flex-direction: column; display: flex; width: 100%; align-items: flex-start; gap: 0.5rem; margin-top: 0.5rem;">
+                    <div class="step-container"
+    style="display: flex; justify-content: space-between; align-self: stretch; margin-left: 1.5rem;">
+    <div style="display: flex; align-items:center; gap: 0.25rem; margin: 0; padding: 0; ">
+        
+        
+        <div style="display: flex; align-items: center;">
+    <svg width="14" height="15" viewBox="0 0 14 15" fill="black" xmlns="http://www.w3.org/2000/svg"
+        style="margin: 0;">
+        <title>Passed test</title>
+        <path
+            d="M6.02 10.72L10.955 5.785L9.975 4.805L6.02 8.76L4.025 6.765L3.045 7.745L6.02 10.72ZM7 14.5C6.03167 14.5 5.12167 14.3162 4.27 13.9488C3.41833 13.5813 2.6775 13.0825 2.0475 12.4525C1.4175 11.8225 0.91875 11.0817 0.55125 10.23C0.18375 9.37833 0 8.46833 0 7.5C0 6.53167 0.18375 5.62167 0.55125 4.77C0.91875 3.91833 1.4175 3.1775 2.0475 2.5475C2.6775 1.9175 3.41833 1.41875 4.27 1.05125C5.12167 0.68375 6.03167 0.5 7 0.5C7.96833 0.5 8.87833 0.68375 9.73 1.05125C10.5817 1.41875 11.3225 1.9175 11.9525 2.5475C12.5825 3.1775 13.0813 3.91833 13.4488 4.77C13.8162 5.62167 14 6.53167 14 7.5C14 8.46833 13.8162 9.37833 13.4488 10.23C13.0813 11.0817 12.5825 11.8225 11.9525 12.4525C11.3225 13.0825 10.5817 13.5813 9.73 13.9488C8.87833 14.3162 7.96833 14.5 7 14.5ZM7 13.1C8.56333 13.1 9.8875 12.5575 10.9725 11.4725C12.0575 10.3875 12.6 9.06333 12.6 7.5C12.6 5.93667 12.0575 4.6125 10.9725 3.5275C9.8875 2.4425 8.56333 1.9 7 1.9C5.43667 1.9 4.1125 2.4425 3.0275 3.5275C1.9425 4.6125 1.4 5.93667 1.4 7.5C1.4 9.06333 1.9425 10.3875 3.0275 11.4725C4.1125 12.5575 5.43667 13.1 7 13.1Z"
+            fill="#0D6832" />
+    </svg>
+</div>
+        
+        <p style="display: inline; margin: 0;">
+            <span class="keyword" style="font-weight: 500;">Given</span>: the system is running
+        </p>
+    </div>
+    <p style="display: inline; margin: 0;">
+        
+        0.024ms
+        
+    </p>
+</div><div class="step-container"
+    style="display: flex; justify-content: space-between; align-self: stretch; margin-left: 1.5rem;">
+    <div style="display: flex; align-items:center; gap: 0.25rem; margin: 0; padding: 0; ">
+        
+        
+        <div style="display: flex; align-items: center;">
+    <svg width="14" height="15" viewBox="0 0 14 15" fill="black" xmlns="http://www.w3.org/2000/svg"
+        style="margin: 0;">
+        <title>Passed test</title>
+        <path
+            d="M6.02 10.72L10.955 5.785L9.975 4.805L6.02 8.76L4.025 6.765L3.045 7.745L6.02 10.72ZM7 14.5C6.03167 14.5 5.12167 14.3162 4.27 13.9488C3.41833 13.5813 2.6775 13.0825 2.0475 12.4525C1.4175 11.8225 0.91875 11.0817 0.55125 10.23C0.18375 9.37833 0 8.46833 0 7.5C0 6.53167 0.18375 5.62167 0.55125 4.77C0.91875 3.91833 1.4175 3.1775 2.0475 2.5475C2.6775 1.9175 3.41833 1.41875 4.27 1.05125C5.12167 0.68375 6.03167 0.5 7 0.5C7.96833 0.5 8.87833 0.68375 9.73 1.05125C10.5817 1.41875 11.3225 1.9175 11.9525 2.5475C12.5825 3.1775 13.0813 3.91833 13.4488 4.77C13.8162 5.62167 14 6.53167 14 7.5C14 8.46833 13.8162 9.37833 13.4488 10.23C13.0813 11.0817 12.5825 11.8225 11.9525 12.4525C11.3225 13.0825 10.5817 13.5813 9.73 13.9488C8.87833 14.3162 7.96833 14.5 7 14.5ZM7 13.1C8.56333 13.1 9.8875 12.5575 10.9725 11.4725C12.0575 10.3875 12.6 9.06333 12.6 7.5C12.6 5.93667 12.0575 4.6125 10.9725 3.5275C9.8875 2.4425 8.56333 1.9 7 1.9C5.43667 1.9 4.1125 2.4425 3.0275 3.5275C1.9425 4.6125 1.4 5.93667 1.4 7.5C1.4 9.06333 1.9425 10.3875 3.0275 11.4725C4.1125 12.5575 5.43667 13.1 7 13.1Z"
+            fill="#0D6832" />
+    </svg>
+</div>
+        
+        <p style="display: inline; margin: 0;">
+            <span class="keyword" style="font-weight: 500;">When</span>: I print "Hello"
+        </p>
+    </div>
+    <p style="display: inline; margin: 0;">
+        
+        0.033ms
+        
+    </p>
+</div><div class="step-container"
+    style="display: flex; justify-content: space-between; align-self: stretch; margin-left: 1.5rem;">
+    <div style="display: flex; align-items:center; gap: 0.25rem; margin: 0; padding: 0; ">
+        
+        
+        <div style="display: flex; align-items: center;">
+    <svg width="14" height="15" viewBox="0 0 14 15" fill="black" xmlns="http://www.w3.org/2000/svg"
+        style="margin: 0;">
+        <title>Passed test</title>
+        <path
+            d="M6.02 10.72L10.955 5.785L9.975 4.805L6.02 8.76L4.025 6.765L3.045 7.745L6.02 10.72ZM7 14.5C6.03167 14.5 5.12167 14.3162 4.27 13.9488C3.41833 13.5813 2.6775 13.0825 2.0475 12.4525C1.4175 11.8225 0.91875 11.0817 0.55125 10.23C0.18375 9.37833 0 8.46833 0 7.5C0 6.53167 0.18375 5.62167 0.55125 4.77C0.91875 3.91833 1.4175 3.1775 2.0475 2.5475C2.6775 1.9175 3.41833 1.41875 4.27 1.05125C5.12167 0.68375 6.03167 0.5 7 0.5C7.96833 0.5 8.87833 0.68375 9.73 1.05125C10.5817 1.41875 11.3225 1.9175 11.9525 2.5475C12.5825 3.1775 13.0813 3.91833 13.4488 4.77C13.8162 5.62167 14 6.53167 14 7.5C14 8.46833 13.8162 9.37833 13.4488 10.23C13.0813 11.0817 12.5825 11.8225 11.9525 12.4525C11.3225 13.0825 10.5817 13.5813 9.73 13.9488C8.87833 14.3162 7.96833 14.5 7 14.5ZM7 13.1C8.56333 13.1 9.8875 12.5575 10.9725 11.4725C12.0575 10.3875 12.6 9.06333 12.6 7.5C12.6 5.93667 12.0575 4.6125 10.9725 3.5275C9.8875 2.4425 8.56333 1.9 7 1.9C5.43667 1.9 4.1125 2.4425 3.0275 3.5275C1.9425 4.6125 1.4 5.93667 1.4 7.5C1.4 9.06333 1.9425 10.3875 3.0275 11.4725C4.1125 12.5575 5.43667 13.1 7 13.1Z"
+            fill="#0D6832" />
+    </svg>
+</div>
+        
+        <p style="display: inline; margin: 0;">
+            <span class="keyword" style="font-weight: 500;">Then</span>: I should see the text "Hello"
+        </p>
+    </div>
+    <p style="display: inline; margin: 0;">
+        
+        0.016ms
+        
+    </p>
+</div>
+                </div>
+                
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+
+        <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    </body>
+</html>
