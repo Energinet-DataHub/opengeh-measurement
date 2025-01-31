@@ -1,4 +1,4 @@
-﻿from typing import Optional
+from typing import Optional
 
 from pyspark.sql import DataFrame, SparkSession
 

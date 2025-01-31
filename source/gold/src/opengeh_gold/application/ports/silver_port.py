@@ -1,4 +1,4 @@
-﻿from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod
 from typing import Optional
 
 from pyspark.sql import DataFrame

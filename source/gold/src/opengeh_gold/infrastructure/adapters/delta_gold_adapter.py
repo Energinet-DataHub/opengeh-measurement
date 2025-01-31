@@ -1,4 +1,4 @@
-﻿from typing import Callable
+from typing import Callable
 
 from pyspark.sql import DataFrame
 

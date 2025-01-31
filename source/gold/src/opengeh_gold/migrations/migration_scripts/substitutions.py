@@ -1,4 +1,4 @@
-﻿from opengeh_gold.infrastructure.config.database_names import DatabaseNames
+from opengeh_gold.infrastructure.config.database_names import DatabaseNames
 from opengeh_gold.infrastructure.config.table_names import TableNames
 
 
