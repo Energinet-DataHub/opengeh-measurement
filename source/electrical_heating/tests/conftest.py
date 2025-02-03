@@ -1,11 +1,12 @@
 ### This file contains the fixtures that are used in the tests. ###
 from pathlib import Path
 from typing import Generator
+from unittest import mock
 
 import pytest
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import DataFrame, SparkSession
-from telemetry_logging.logging_configuration import configure_logging
+from telemetry_logging.logging_configuration import LoggingSettings, configure_logging
 from testcommon.delta_lake import create_database, create_table
 
 from opengeh_electrical_heating.infrastructure.measurements_bronze.database_definitions import (
@@ -61,8 +62,29 @@ def spark() -> Generator[SparkSession, None, None]:
 @pytest.fixture(autouse=True)
 def configure_dummy_logging() -> None:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
-
-    configure_logging(cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name")
+    env_args = {
+        "CLOUD_ROLE_NAME": "test_role",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
+        "SUBSYSTEM": "test_subsystem",
+        "ORCHESTRATION_INSTANCE_ID": "4a540892-2c0a-46a9-9257-c4e13051d76b",
+    }
+    # Command line arguments
+    with (
+        mock.patch(
+            "sys.argv",
+            [
+                "program_name",
+                "--force_configuration",
+                "false",
+                "--orchestration_instance_id",
+                "4a540892-2c0a-46a9-9257-c4e13051d76a",
+            ],
+        ),
+        mock.patch.dict("os.environ", env_args, clear=False),
+    ):
+        logging_settings = LoggingSettings()
+        logging_settings.applicationinsights_connection_string = None  # for testing purposes
+        configure_logging(logging_settings=logging_settings, extras=None)
 
 
 @pytest.fixture(scope="session")

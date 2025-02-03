@@ -1,26 +1,16 @@
 """A module."""
 
-import sys
 import uuid
-from argparse import Namespace
-from collections.abc import Callable
 from datetime import datetime, timezone
 
-import telemetry_logging.logging_configuration as config
-from opentelemetry.trace import SpanKind
 from pyspark.sql import DataFrame, SparkSession
 from telemetry_logging import use_span
-from telemetry_logging.span_recording import span_record_exception
 
 import opengeh_electrical_heating.infrastructure.electrical_heating_internal as ehi
 import opengeh_electrical_heating.infrastructure.electricity_market as em
 import opengeh_electrical_heating.infrastructure.measurements_gold as mg
 from opengeh_electrical_heating.application.job_args.electrical_heating_args import (
     ElectricalHeatingArgs,
-)
-from opengeh_electrical_heating.application.job_args.electrical_heating_job_args import (
-    parse_command_line_arguments,
-    parse_job_arguments,
 )
 from opengeh_electrical_heating.domain import ColumnNames
 from opengeh_electrical_heating.domain.calculation import (
@@ -32,59 +22,12 @@ from opengeh_electrical_heating.domain.calculation_results import (
 from opengeh_electrical_heating.infrastructure.electrical_heating_internal.schemas import (
     calculations as schemas,
 )
-from opengeh_electrical_heating.infrastructure.spark_initializor import (
-    initialize_spark,
-)
-
-
-def execute_with_deps(
-    *,
-    cloud_role_name: str = "dbr-electrical-heating",
-    applicationinsights_connection_string: str | None = None,
-    parse_command_line_args: Callable[..., Namespace] = parse_command_line_arguments,
-    parse_job_args: Callable[..., ElectricalHeatingArgs] = parse_job_arguments,
-) -> None:
-    """Start overload with explicit dependencies for easier testing."""
-    config.configure_logging(
-        cloud_role_name=cloud_role_name,
-        tracer_name="electrical-heating-job",
-        applicationinsights_connection_string=applicationinsights_connection_string,
-        extras={"Subsystem": "measurements"},
-    )
-
-    with config.get_tracer().start_as_current_span(__name__, kind=SpanKind.SERVER) as span:
-        # Try/except added to enable adding custom fields to the exception as
-        # the span attributes do not appear to be included in the exception.
-        try:
-            # The command line arguments are parsed to have necessary information for
-            # coming log messages
-            command_line_args = parse_command_line_args()
-
-            # Add extra to structured logging data to be included in every log message.
-            config.add_extras(
-                {
-                    "orchestration-instance-id": command_line_args.orchestration_instance_id,
-                }
-            )
-            span.set_attributes(config.get_extras())
-            args = parse_job_args(command_line_args)
-            spark = initialize_spark()
-            _execute_with_deps(spark, args)
-
-        # Added as ConfigArgParse uses sys.exit() rather than raising exceptions
-        except SystemExit as e:
-            if e.code != 0:
-                span_record_exception(e, span)
-            sys.exit(e.code)
-
-        except Exception as e:
-            span_record_exception(e, span)
-            sys.exit(4)
 
 
 @use_span()
 def _execute_with_deps(spark: SparkSession, args: ElectricalHeatingArgs) -> None:
-    execution_start_datetime = datetime.now(timezone.utc)
+    if args.execution_start_datetime is not None:
+        execution_start_datetime = datetime.now(timezone.utc)
 
     # Create repositories to obtain data frames
     electricity_market_repository = em.Repository(spark, args.electricity_market_data_path)

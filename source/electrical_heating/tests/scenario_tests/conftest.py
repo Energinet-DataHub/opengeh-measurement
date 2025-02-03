@@ -1,5 +1,7 @@
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest import mock
 
 import pytest
 from pyspark.sql import SparkSession
@@ -28,10 +30,30 @@ from tests.testsession_configuration import (
 @pytest.fixture(scope="session", autouse=True)
 def enable_logging() -> None:
     """Prevent logging from failing due to missing logging configuration."""
-    logging_configuration.configure_logging(
-        cloud_role_name="some cloud role name",
-        tracer_name="some tracer name",
-    )
+    env_args = {
+        "CLOUD_ROLE_NAME": "some cloud role name",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "",
+        "SUBSYSTEM": "some tracer name",
+        "CATALOG_NAME": "default_hadoop",
+        "time_zone": "Europe/Copenhagen",
+        "execution_start_datetime": "2019-12-04",
+    }
+    with (
+        mock.patch(
+            "sys.argv",
+            [
+                "program_name",
+                "--force_configuration",
+                "false",
+                "--orchestration_instance_id",
+                str(uuid.uuid4()),
+            ],
+        ),
+        mock.patch.dict("os.environ", env_args, clear=False),
+    ):
+        logging_settings = logging_configuration.LoggingSettings()
+        logging_settings.applicationinsights_connection_string = None
+        logging_configuration.configure_logging(logging_settings=logging_settings, extras=None)
 
 
 @pytest.fixture(scope="module")

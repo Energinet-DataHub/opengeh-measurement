@@ -738,7 +738,7 @@ requires-dist = [
     { name = "azure-monitor-opentelemetry", specifier = "==1.6.4" },
     { name = "configargparse", specifier = "==1.7.0" },
     { name = "delta-spark", specifier = "==3.2.0" },
-    { name = "opengeh-telemetry", git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Ftelemetry&rev=3.0.1" },
+    { name = "opengeh-telemetry", git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Ftelemetry&rev=cbang%2Fsimplify_entry_point2" },
     { name = "pydantic-settings", specifier = ">=2.7.1" },
     { name = "pyspark", specifier = "==3.5.1" },
     { name = "python-dateutil", specifier = "==2.8.2" },
@@ -758,7 +758,7 @@ dev = [
 [[package]]
 name = "opengeh-telemetry"
 version = "2.2.1"
-source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Ftelemetry&rev=3.0.1#9dfc33c2a5c53c91249e632550eea93415ea6013" }
+source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Ftelemetry&rev=cbang%2Fsimplify_entry_point2#6e8b5aa61830aab914886b81d96a19568d239a16" }
 dependencies = [
     { name = "azure-core" },
     { name = "azure-identity" },

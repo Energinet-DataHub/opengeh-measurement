@@ -1,8 +1,9 @@
 from typing import Generator
+from unittest import mock
 
 import pytest
 from pyspark.sql import SparkSession
-from telemetry_logging.logging_configuration import configure_logging
+from telemetry_logging.logging_configuration import LoggingSettings, configure_logging
 
 from tests import PROJECT_ROOT
 from tests.testsession_configuration import TestSessionConfiguration
@@ -22,10 +23,31 @@ def spark() -> Generator[SparkSession, None, None]:
     session.stop()
 
 
-@pytest.fixture(autouse=True)
 def configure_dummy_logging() -> None:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
-    configure_logging(cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name")
+    env_args = {
+        "CLOUD_ROLE_NAME": "test_role",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
+        "SUBSYSTEM": "test_subsystem",
+        "ORCHESTRATION_INSTANCE_ID": "4a540892-2c0a-46a9-9257-c4e13051d76b",
+    }
+    # Command line arguments
+    with (
+        mock.patch(
+            "sys.argv",
+            [
+                "program_name",
+                "--force_configuration",
+                "false",
+                "--orchestration_instance_id",
+                "4a540892-2c0a-46a9-9257-c4e13051d76a",
+            ],
+        ),
+        mock.patch.dict("os.environ", env_args, clear=False),
+    ):
+        logging_settings = LoggingSettings()
+        logging_settings.applicationinsights_connection_string = None  # for testing purposes
+        configure_logging(logging_settings=logging_settings, extras=None)
 
 
 @pytest.fixture(scope="session")

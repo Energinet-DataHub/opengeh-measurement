@@ -1,8 +1,9 @@
 from pathlib import Path
+from unittest import mock
 
 import pytest
 from pyspark.sql import SparkSession
-from telemetry_logging import logging_configuration
+from telemetry_logging.logging_configuration import LoggingSettings, configure_logging
 from testcommon.dataframes import (
     AssertDataframesConfiguration,
     read_csv,
@@ -26,11 +27,30 @@ from tests.testsession_configuration import (
 
 @pytest.fixture(scope="session", autouse=True)
 def enable_logging() -> None:
-    """Prevent logging from failing due to missing logging configuration."""
-    logging_configuration.configure_logging(
-        cloud_role_name="some cloud role name",
-        tracer_name="some tracer name",
-    )
+    """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
+    env_args = {
+        "CLOUD_ROLE_NAME": "test_role",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
+        "SUBSYSTEM": "test_subsystem",
+        "ORCHESTRATION_INSTANCE_ID": "4a540892-2c0a-46a9-9257-c4e13051d76b",
+    }
+    # Command line arguments
+    with (
+        mock.patch(
+            "sys.argv",
+            [
+                "program_name",
+                "--force_configuration",
+                "false",
+                "--orchestration_instance_id",
+                "4a540892-2c0a-46a9-9257-c4e13051d76a",
+            ],
+        ),
+        mock.patch.dict("os.environ", env_args, clear=False),
+    ):
+        logging_settings = LoggingSettings()
+        logging_settings.applicationinsights_connection_string = None  # for testing purposes
+        configure_logging(logging_settings=logging_settings, extras=None)
 
 
 @pytest.fixture(scope="module")

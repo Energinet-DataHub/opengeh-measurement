@@ -10,7 +10,7 @@ dependencies = [
     "configargparse==1.7.0",
     "delta-spark==3.2.0",
     "opengeh-pyspark @ git+https://github.com/Energinet-DataHub/opengeh-python-packages@3.1.1#subdirectory=source/pyspark_functions",
-    "opengeh-telemetry @ git+https://github.com/Energinet-DataHub/opengeh-python-packages@3.1.1#subdirectory=source/telemetry",
+    "opengeh-telemetry @ git+https://github.com/Energinet-DataHub/opengeh-python-packages@cbang/simplify_entry_point2#subdirectory=source/telemetry",
     "pydantic-settings>=2.7.1",
     "pyspark==3.5.1",
     "python-dateutil==2.8.2",
@@ -69,6 +69,7 @@ ignore = [
     "UP006",
     "UP007",
     "UP035",
+    "F401",
 ]
 exclude = ["notebooks/*"]
 
@@ -77,3 +78,8 @@ exclude = ["notebooks/*"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.uv.sources]
+opengeh-telemetry = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages", subdirectory = "source/telemetry", branch = "cbang/simplify_entry_point2" }
+opengeh-testcommon = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages", subdirectory = "source/testcommon", rev = "3.1.1" }
+opengeh-pyspark = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages", subdirectory = "source/pyspark_functions", rev = "3.1.1" }
