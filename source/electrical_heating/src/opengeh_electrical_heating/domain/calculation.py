@@ -14,6 +14,7 @@ import opengeh_electrical_heating.infrastructure.measurements_gold as mg
 from opengeh_electrical_heating.application.job_args.electrical_heating_args import (
     ElectricalHeatingArgs,
 )
+from opengeh_electrical_heating.domain.calculated_measurements_daily import CalculatedMeasurementsDaily
 from opengeh_electrical_heating.domain.constants import (
     ELECTRICAL_HEATING_LIMIT_YEARLY,
 )
@@ -49,7 +50,7 @@ def execute_core_logic(
     consumption_metering_point_periods: DataFrame,
     child_metering_points: DataFrame,
     time_zone: str,
-) -> DataFrame:
+) -> CalculatedMeasurementsDaily:
     energy = time_series_points.where(
         (F.col("metering_point_type") == MeteringPointType.CONSUMPTION_METERING_POINT_TYPE.value)
         | (F.col("metering_point_type") == MeteringPointType.NET_CONSUMPTION.value)
@@ -89,7 +90,7 @@ def execute_core_logic(
 
     electrical_heating = convert_to_utc(electrical_heating, time_zone)
 
-    return electrical_heating.orderBy(F.col("metering_point_id"), F.col("date"))
+    return CalculatedMeasurementsDaily(electrical_heating.orderBy(F.col("metering_point_id"), F.col("date")))
 
 
 def _filter_unchanged_electrical_heating(
@@ -129,7 +130,7 @@ def _impose_period_quantity_limit(time_series_points: DataFrame) -> DataFrame:
         .otherwise(
             F.col("quantity"),
         )
-        .cast(T.DecimalType(38, 3))
+        .cast(T.DecimalType(18, 3))
         .alias("quantity"),
         F.col("cumulative_quantity"),
         F.col("metering_point_id"),
