@@ -78,14 +78,14 @@ def contracts_path() -> str:
 
 
 @pytest.fixture(scope="session")
-def test_session_configuration(tests_path: str) -> TestSessionConfiguration:
-    settings_file_path = Path(tests_path) / "testsession.local.settings.yml"
-    return TestSessionConfiguration.load(settings_file_path)
+def test_files_folder_path(tests_path: str) -> str:
+    return f"{tests_path}/utils/test_files"
 
 
 @pytest.fixture(scope="session")
-def test_files_folder_path(tests_path: str) -> str:
-    return f"{tests_path}/utils/test_files"
+def test_session_configuration(tests_path: str) -> TestSessionConfiguration:
+    settings_file_path = Path(tests_path) / "testsession.local.settings.yml"
+    return TestSessionConfiguration.load(settings_file_path)
 
 
 @pytest.fixture(scope="session")

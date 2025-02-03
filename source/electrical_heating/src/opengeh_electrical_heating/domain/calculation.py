@@ -30,6 +30,7 @@ def execute(spark: SparkSession, args: ElectricalHeatingArgs) -> None:
     # Read data frames
     consumption_metering_point_periods = electricity_market_repository.read_consumption_metering_point_periods()
     child_metering_points = electricity_market_repository.read_child_metering_points()
+
     time_series_points = measurements_gold_repository.read_time_series_points()
 
     # Execute the calculation logic
