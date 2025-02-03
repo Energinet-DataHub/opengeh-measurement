@@ -1,0 +1,2 @@
+metering_point_id;period_from_date;period_to_date;child_metering_point_id;child_period_from_date;child_period_to_date
+170000000000000201;2020-01-31T23:00:00Z;;900000000000000001;2025-12-31T23:00:00Z;2026-01-25T23:00:00Z
