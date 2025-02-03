@@ -1,5 +1,6 @@
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import SparkSession
 
+from opengeh_electrical_heating.infrastructure.measurements_bronze.data_structure import MeasurementsBronze
 from opengeh_electrical_heating.infrastructure.measurements_bronze.database_definitions import (
     MeasurementsBronzeDatabase,
 )
@@ -20,8 +21,8 @@ class Repository:
         else:
             self._full_table_path = f"{self._database_name}.{self._measurements_table_name}"
 
-    def write_measurements(self, df: DataFrame, write_mode: str = "append") -> None:
-        df.write.format("delta").mode(write_mode).saveAsTable(self._full_table_path)
+    def write_measurements(self, measurements_bronze: MeasurementsBronze, write_mode: str = "append") -> None:
+        measurements_bronze.df.write.format("delta").mode(write_mode).saveAsTable(self._full_table_path)
 
-    def read_measurements(self) -> DataFrame:
-        return self._spark.read.table(self._full_table_path)
+    def read_measurements(self) -> MeasurementsBronze:
+        return MeasurementsBronze(self._spark.read.table(self._full_table_path))

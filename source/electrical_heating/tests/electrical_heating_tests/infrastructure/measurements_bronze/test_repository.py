@@ -1,18 +1,19 @@
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import SparkSession
 
+from opengeh_electrical_heating.infrastructure.measurements_bronze.data_structure import MeasurementsBronze
 from opengeh_electrical_heating.infrastructure.measurements_bronze.repository import Repository
 
 
 def test__write_measurements__can_be_read(
     spark: SparkSession,
-    measurements: DataFrame,
+    measurements_bronze: MeasurementsBronze,
 ) -> None:
     # Arrange
     repository = Repository(spark)
-    excepted_count = measurements.count()
+    expected_count = measurements_bronze.df.count()
 
     # Act
-    repository.write_measurements(measurements, write_mode="overwrite")
+    repository.write_measurements(measurements_bronze, write_mode="overwrite")
 
     # Assert
-    assert repository.read_measurements().count() == excepted_count
+    assert repository.read_measurements().df.count() == excepted_count

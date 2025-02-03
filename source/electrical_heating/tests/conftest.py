@@ -4,10 +4,11 @@ from typing import Generator
 
 import pytest
 from delta import configure_spark_with_delta_pip
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import SparkSession
 from telemetry_logging.logging_configuration import configure_logging
 from testcommon.delta_lake import create_database, create_table
 
+from opengeh_electrical_heating.infrastructure.measurements_bronze.data_structure import MeasurementsBronze
 from opengeh_electrical_heating.infrastructure.measurements_bronze.database_definitions import (
     MeasurementsBronzeDatabase,
 )
@@ -25,7 +26,7 @@ from tests.testsession_configuration import TestSessionConfiguration
 from tests.utils.delta_table_utils import (
     read_from_csv,
 )
-from tests.utils.measurements_utils import create_measurements_dataframe
+from tests.utils.measurements_utils import create_measurements_bronze_dataframe
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -89,7 +90,7 @@ def test_files_folder_path(tests_path: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def measurements(spark: SparkSession, test_files_folder_path: str) -> DataFrame:
+def measurements_bronze(spark: SparkSession, test_files_folder_path: str) -> MeasurementsBronze:
     create_database(spark, MeasurementsBronzeDatabase.DATABASE_NAME)
 
     create_table(
@@ -103,7 +104,7 @@ def measurements(spark: SparkSession, test_files_folder_path: str) -> DataFrame:
     file_name = f"{test_files_folder_path}/{MeasurementsBronzeDatabase.DATABASE_NAME}-{MeasurementsBronzeDatabase.MEASUREMENTS_NAME}.csv"
     measurements = read_from_csv(spark, file_name)
 
-    return create_measurements_dataframe(spark, measurements)
+    return create_measurements_bronze_dataframe(spark, measurements)
 
 
 @pytest.fixture(scope="session")

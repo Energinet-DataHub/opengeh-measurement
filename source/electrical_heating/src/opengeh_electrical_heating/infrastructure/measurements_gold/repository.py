@@ -1,5 +1,6 @@
 from pyspark.sql import DataFrame, SparkSession
 
+from opengeh_electrical_heating.infrastructure.measurements_gold.data_structure import TimeSeriesPoints
 from opengeh_electrical_heating.infrastructure.measurements_gold.database_definitions import (
     MeasurementsGoldDatabase,
 )
@@ -14,10 +15,11 @@ class Repository:
         self._spark = spark
         self._catalog_name = catalog_name
 
-    def read_time_series_points(self) -> DataFrame:
-        return self._read_view_or_table(
+    def read_time_series_points(self) -> TimeSeriesPoints:
+        df = self._read_view_or_table(
             MeasurementsGoldDatabase.TIME_SERIES_POINTS_NAME,
         )
+        return TimeSeriesPoints(df)
 
     def _read_view_or_table(
         self,

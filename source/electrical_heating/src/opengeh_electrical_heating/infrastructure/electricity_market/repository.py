@@ -2,6 +2,10 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 
+from opengeh_electrical_heating.infrastructure.electricity_market.data_structure import (
+    ChildMeteringPoints,
+    ConsumptionMeteringPointPeriods,
+)
 from opengeh_electrical_heating.infrastructure.electricity_market.schemas.child_metering_points_v1 import (
     child_metering_points_v1,
 )
@@ -19,13 +23,15 @@ class Repository:
         self._spark = spark
         self._electricity_market_data_path = electricity_market_data_path
 
-    def read_consumption_metering_point_periods(self) -> DataFrame:
+    def read_consumption_metering_point_periods(self) -> ConsumptionMeteringPointPeriods:
         file_path = f"{self._electricity_market_data_path}/consumption_metering_point_periods_v1.csv"
-        return _read_csv(spark=self._spark, path=file_path, schema=consumption_metering_point_periods_v1)
+        df = _read_csv(spark=self._spark, path=file_path, schema=consumption_metering_point_periods_v1)
+        return ConsumptionMeteringPointPeriods(df)
 
-    def read_child_metering_points(self) -> DataFrame:
+    def read_child_metering_points(self) -> ChildMeteringPoints:
         file_path = f"{self._electricity_market_data_path}/child_metering_points_v1.csv"
-        return _read_csv(spark=self._spark, path=file_path, schema=child_metering_points_v1)
+        df = _read_csv(spark=self._spark, path=file_path, schema=child_metering_points_v1)
+        return ChildMeteringPoints(df)
 
 
 # TODO JMG: Use read_csv from opengeh_python_packages
