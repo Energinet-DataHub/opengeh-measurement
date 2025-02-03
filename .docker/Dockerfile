@@ -27,6 +27,7 @@ RUN apt-get update \
   gnupg2 \
   gcc \
   python3-dev \
+  protobuf-compiler \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean
 

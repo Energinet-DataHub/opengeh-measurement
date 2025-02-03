@@ -6,3 +6,9 @@ class BronzeSubmittedTransactionsColumnNames:
     offset = "offset"
     timestamp = "timestamp"
     timestampType = "timestampType"
+
+
+class ValueColumnNames:
+    version = "version"
+    orchestration_instance_id = "orchestration_instance_id"
+    orchestration_type = "orchestration_type"

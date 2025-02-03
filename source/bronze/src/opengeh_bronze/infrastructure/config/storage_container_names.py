@@ -1,0 +1,2 @@
+class StorageContainerNames:
+    bronze = "bronze"

@@ -10,6 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
+notify_transactions_persisted = "opengeh_bronze.entry_points:notify_transactions_persisted"
 ingest_submitted_transactions = "opengeh_bronze.entry_points:ingest_submitted_transactions"
 migrate = "opengeh_bronze.entry_points:migrate"
 

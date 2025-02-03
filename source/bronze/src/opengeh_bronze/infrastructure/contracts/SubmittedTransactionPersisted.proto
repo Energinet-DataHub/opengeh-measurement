@@ -5,8 +5,9 @@ package google.protobuf;
 option csharp_namespace = "Energinet.DataHub.Measurements.Contracts";
 
 message SubmittedTransactionPersisted {
-  string orchestration_instance_id = 1;
-  OrchestrationType orchestration_type = 2;
+  string version = 1; 
+  string orchestration_instance_id = 2;
+  OrchestrationType orchestration_type = 3;
 }
 
 enum OrchestrationType {

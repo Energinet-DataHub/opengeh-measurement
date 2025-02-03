@@ -3,7 +3,6 @@
 package google.protobuf;
 
 import "google/protobuf/timestamp.proto";
-import "DecimalValue.proto";
 
 option csharp_namespace = "Energinet.DataHub.Measurements.Contracts";
 
@@ -25,7 +24,6 @@ message PersistSubmittedTransaction {
 
 message Point {
   int32 position = 1;
-  DecimalValue quantity = 2;
   Quality quality = 3;
 }
 

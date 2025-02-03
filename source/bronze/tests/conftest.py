@@ -21,7 +21,7 @@ def spark(tests_path: str) -> Generator[SparkSession, None, None]:
     warehouse_location = f"{tests_path}/__spark-warehouse__"
 
     session = configure_spark_with_delta_pip(
-        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)
+        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)  # type: ignore
         .config("spark.sql.streaming.schemaInference", True)
         .config("spark.default.parallelism", 1)
         .config("spark.rdd.compress", False)
@@ -47,7 +47,8 @@ def spark(tests_path: str) -> Generator[SparkSession, None, None]:
         .config("datanucleus.autoCreateSchema", "true")
         .config("hive.metastore.schema.verification", "false")
         .config("hive.metastore.schema.verification.record.version", "false")
-        .enableHiveSupport()
+        .enableHiveSupport(),
+        extra_packages=["org.apache.spark:spark-protobuf_2.12:3.5.4"],
     ).getOrCreate()
 
     _create_schemas(session)
